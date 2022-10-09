@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SurveyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,8 @@ Route::group(
 	],
 	function () {
 		Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+		Route::resource('survey', SurveyController::class);
 	}
 );
 
