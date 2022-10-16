@@ -37,6 +37,7 @@ class StoreSurveyRequest extends FormRequest
 			'description' => 'nullable|string',
 			'expire_date' => 'nullable|date',
 			'image' => 'nullable|string',
+			'questions' => 'nullable|array',
 		];
 	}
 }
