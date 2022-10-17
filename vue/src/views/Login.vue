@@ -1,11 +1,21 @@
 <template>
 	<div>
 		<div>
-			<img
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
 				class="mx-auto h-12 w-auto"
-				src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-				alt="Your Company"
-			/>
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+				/>
+			</svg>
+
 			<h2
 				class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900"
 			>
@@ -22,10 +32,7 @@
 			</p>
 		</div>
 		<form class="mt-8 space-y-6" @submit.prevent="login">
-			<div
-				v-if="errorMsg"
-				class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded"
-			>
+			<Alert v-if="errorMsg">
 				{{ errorMsg }}
 				<span
 					@click="errorMsg = ''"
@@ -46,7 +53,7 @@
 						/>
 					</svg>
 				</span>
-			</div>
+			</Alert>
 			<div class="-space-y-px rounded-md shadow-sm">
 				<div>
 					<label for="email" class="sr-only">Email address</label>
@@ -91,6 +98,11 @@
 			</div>
 			<div>
 				<button
+					:disabled="loading"
+					:class="{
+						'cursor-not-allowed': loading,
+						'hover:bg-indigo-500': loading,
+					}"
 					type="submit"
 					class="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 				>
@@ -100,6 +112,27 @@
 							aria-hidden="true"
 						/>
 					</span>
+					<svg
+						v-if="loading"
+						class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+					>
+						<circle
+							class="opacity-25"
+							cx="12"
+							cy="12"
+							r="10"
+							stroke="currentColor"
+							stroke-width="4"
+						></circle>
+						<path
+							class="opacity-75"
+							fill="currentColor"
+							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+						></path>
+					</svg>
 					Sign in
 				</button>
 			</div>
@@ -109,9 +142,10 @@
 
 <script setup>
 import { LockClosedIcon } from "@heroicons/vue/20/solid";
-import { ref } from "@vue/reactivity";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import store from "../store";
+import Alert from "../components/Alert.vue";
 
 const router = useRouter();
 const user = {
@@ -119,17 +153,24 @@ const user = {
 	pasword: "",
 	remember: false,
 };
+
+const loading = ref(false);
+
 let errorMsg = ref("");
 
 function login() {
+	loading.value = true;
+
 	store
 		.dispatch("login", user)
 		.then(() => {
+			loading.value = false;
 			router.push({
 				name: "Dashboard",
 			});
 		})
 		.catch((error) => {
+			loading.value = false;
 			errorMsg.value = error.response.data.error;
 		});
 }
