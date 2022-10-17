@@ -32,7 +32,7 @@ class SurveyController extends Controller
 			$validated_data['image'] = $image_path;
 		}
 
-		$survey = Survey::create($validated_data);
+		$survey = Survey::create(Arr::except($validated_data, ['questions']));
 
     foreach ($validated_data['questions'] as $question) {
       $question['survey_id'] = $survey->id;
@@ -55,6 +55,11 @@ class SurveyController extends Controller
 		return new SurveyResource($survey);
 	}
 
+	public function showPublic(Survey $survey)
+	{
+		return new SurveyResource($survey);
+	}
+
 	public function update(UpdateSurveyRequest $request, Survey $survey)
 	{
 		$validated_data = $request->validated();
@@ -69,7 +74,7 @@ class SurveyController extends Controller
 			}
 		}
 
-		$survey->update($validated_data);
+		$survey->update(Arr::except($validated_data, ['questions']));
 
 		$existing_ids = $survey->questions()->pluck('id')->toArray();
 		$new_ids = Arr::pluck($validated_data['questions'], 'id');
@@ -165,7 +170,7 @@ class SurveyController extends Controller
 				'question' => 'required|string',
 				'type' => 'required|in:'. implode(',', Survey::TYPES),
 				'description' => 'nullable|string',
-				'date' => 'present',
+				'data' => 'present',
 				'survey_id' => 'exists:surveys,id',
 			],
 		);
@@ -188,7 +193,7 @@ class SurveyController extends Controller
 				'question' => 'required|string',
 				'type' => 'required|in:'. implode(',', Survey::TYPES),
 				'description' => 'nullable|string',
-				'date' => 'present',
+				'data' => 'present',
 				// 'survey_id' => 'exists:surveys,id',
 			],
 		);

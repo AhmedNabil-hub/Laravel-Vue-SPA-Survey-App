@@ -26,7 +26,7 @@
 			</div>
 		</template>
 		<div v-if="surveys.loading" class="flex justify-center">Loading...</div>
-		<div v-else>
+		<div v-else-if="surveys.data.length">
 			<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
 				<SurveyListItem
 					v-for="(survey, ind) in surveys.data"
@@ -63,6 +63,7 @@
 				</nav>
 			</div>
 		</div>
+		<div v-else class="flex justify-center">There is no surveys available</div>
 	</PageComponent>
 </template>
 

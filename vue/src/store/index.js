@@ -62,7 +62,7 @@ const store = createStore({
 		deleteSurvey({}, id) {
 			return axiosClient.delete(`/survey/${id}`);
 		},
-		getSurveys({ commit }, { url = unll } = {}) {
+		getSurveys({ commit }, { url = null } = {}) {
 			url = url || "/survey";
 
 			commit("setSurveysLoading", true);
@@ -76,6 +76,22 @@ const store = createStore({
 				})
 				.catch((err) => {
 					commit("setSurveysLoading", false);
+					throw err;
+				});
+		},
+		getSurveyBySlug({ commit }, slug) {
+			commit("setCurrentSurveyLoading", true);
+			return axiosClient
+				.get(`/survey-by-slug/${slug}`)
+				.then((res) => {
+					commit("setCurrentSurvey", res.data);
+					commit("setCurrentSurveyLoading", false);
+
+					return res;
+				})
+				.catch((err) => {
+					commit("setCurrentSurveyLoading", false);
+
 					throw err;
 				});
 		},

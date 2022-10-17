@@ -131,9 +131,8 @@
 					Add Option
 				</button>
 			</h4>
-
 			<div
-				v-if="!model.data.options.length"
+				v-if="!model.data.options"
 				class="text-xs text-gray-600 text-center py-3"
 			>
 				You don't have any options defiend
