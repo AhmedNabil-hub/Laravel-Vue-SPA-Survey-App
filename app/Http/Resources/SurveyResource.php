@@ -2,8 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class SurveyResource extends JsonResource
 {
@@ -21,11 +22,12 @@ class SurveyResource extends JsonResource
 			'slug' => $this->slug,
 			'status' => $this->status !== 'draft',
 			'description' => $this->description,
-			'created_at' => $this->created_at,
-			'updated_at' => $this->updated_at,
-			'expire_date' => $this->expire_date,
+			'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
+			'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
+			'expire_date' => Carbon::parse($this->expire_date)->format('Y-m-d H:i:s'),
 			'image_url' => $this->image ? URL::to($this->image) : null,
 			'questions' => SurveyQuestionResource::collection($this->questions),
+			'questions_count' => $this->questions()->count() ?? 0,
 		];
 	}
 }
