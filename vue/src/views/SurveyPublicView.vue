@@ -4,7 +4,7 @@
 		<form v-else @submit.prevent="submitSurvey" class="container mx-auto">
 			<div class="grid grid-cols-6 items-center pt-2">
 				<div class="mr-4">
-					<img :src="survey.image_url" alt="" />
+					<img class="rounded-md" :src="survey.image_url" alt="" />
 				</div>
 				<div class="col-span-5">
 					<h1 class="text-3xl mb-3">
@@ -16,7 +16,7 @@
 
 			<div
 				v-if="surveyFinished"
-				class="py-8 px-6 bg-emerald-400 text-white w-[600px] mx-auto"
+				class="py-8 px-6 bg-emerald-400 text-white w-[600px] mx-auto rounded-md"
 			>
 				<div class="text-xl mb-3 font-semibold">
 					Thank you for participating in this survey
@@ -42,6 +42,7 @@
 			</div>
 
 			<button
+				v-if="!surveyFinished"
 				type="submit"
 				class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 			>
@@ -70,7 +71,7 @@ const answers = ref({});
 store.dispatch("getSurveyBySlug", route.params.slug);
 
 function submitSurvey() {
-	console.log(JSON.stringify(answers.value, undefined, 2));
+	// console.log(JSON.stringify(answers.value, undefined, 2));
 	store
 		.dispatch("saveSurveyAnswer", {
 			surveyId: survey.value.id,

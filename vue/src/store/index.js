@@ -95,6 +95,10 @@ const store = createStore({
 					throw err;
 				});
 		},
+		saveSurveyAnswer({commit}, {surveyId, answers}) {
+			return axiosClient
+				.post(`/survey/${surveyId}/answer`, {answers})
+		},
 		register({ commit }, user) {
 			// return fetch(`http://localhost:8000/api/register`, {
 			// 	headers: {

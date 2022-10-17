@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SurveyQuestionAnswer extends Model
 {
-    use HasFactory;
+	use HasFactory;
+
+	protected $guarded = [];
 }

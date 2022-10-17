@@ -17,6 +17,7 @@ Route::group(
 );
 
 Route::get('/survey-by-slug/{survey:slug}', [SurveyController::class, 'showPublic']);
+Route::post('/survey/{survey}/answer', [SurveyController::class, 'storeAnswer']);
 
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
